@@ -4,3 +4,6 @@ dist-newstyle
 # Nix
 .direnv
 result
+
+# Emacs
+.dir-locals.el
