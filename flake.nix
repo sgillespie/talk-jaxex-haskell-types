@@ -52,6 +52,26 @@
             config.haskellProjects.default.devShell
             config.treefmt.build.devShell
           ];
+
+          nativeBuildInputs = with pkgs; [
+            pandoc
+            haskellPackages.feedback
+          ];
+        };
+
+        packages = {
+          default = self'.packages.haskell-types-examples;
+          build-slides =
+            let
+              drv = {
+                src = ./slides;
+                nativeBuildInputs = [ pkgs.pandoc ];
+              };
+            in
+              pkgs.runCommand "build-slides" drv ''
+                mkdir -p $out
+                pandoc -t revealjs -s $src/slides.md -o $out/index.html
+              '';
         };
       };
     };
