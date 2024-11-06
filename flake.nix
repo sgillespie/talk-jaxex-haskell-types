@@ -31,8 +31,11 @@
       perSystem = { self', system, lib, config, pkgs, ... }: {
         haskellProjects.default = {
           basePackages = pkgs.haskell.packages.ghc96;
-
-          autoWire = [ "packages" "apps" "checks" ];
+          devShell.tools = hp: with hp; {
+            inherit feedback;
+            inherit (pkgs) pandoc;
+          };
+          autoWire = [ "packages" "apps" "checks" "devShells" ];
         };
 
         treefmt.config = {
@@ -45,18 +48,6 @@
           programs.nixpkgs-fmt.enable = true;
           programs.cabal-fmt.enable = true;
           programs.hlint.enable = true;
-        };
-
-        devShells.default = pkgs.mkShell {
-          inputsFrom = [
-            config.haskellProjects.default.devShell
-            config.treefmt.build.devShell
-          ];
-
-          nativeBuildInputs = with pkgs; [
-            pandoc
-            haskellPackages.feedback
-          ];
         };
 
         packages = {
