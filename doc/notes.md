@@ -148,6 +148,6 @@ Haskell supports user-defined datatypes with type synonyms and algebraic types
 
 ## Resources
 
- * https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/
- * https://www.parsonsmatt.org/2017/10/11/type_safety_back_and_forth.html
- * https://fsharpforfunandprofit.com/series/designing-with-types/
+ * [Parse, don't validate (Alexis King)](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)
+ * [Type Safety Back and Forth (Matt Parsons)](https://www.parsonsmatt.org/2017/10/11/type_safety_back_and_forth.html)
+ * [Designing with types (Scott Wlaschin)](https://fsharpforfunandprofit.com/series/designing-with-types/)

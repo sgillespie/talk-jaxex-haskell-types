@@ -58,10 +58,16 @@
                 src = ./slides;
                 nativeBuildInputs = [ pkgs.pandoc ];
               };
+              s5 = pkgs.fetchzip {
+                url = "https://meyerweb.com/eric/tools/s5/v/1.1/s5-11.zip";
+                hash = "sha256-yTm7GuPskITCxpOOWCFAoKG28TRoULka1n+pYBtlMAY=";
+                stripRoot = false;
+              };
             in
               pkgs.runCommand "build-slides" drv ''
                 mkdir -p $out
-                pandoc -t revealjs -s $src/slides.md -o $out/index.html
+                cp -r ${s5}/ui $out/s5
+                pandoc -t s5 -s $src/slides.md -o $out/index.html
               '';
         };
       };
