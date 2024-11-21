@@ -1,6 +1,7 @@
-# Programming with Types in Haskell
+# Haskell Types Basics
 
-The subject of this talk is taking advantage of the type system to help drive our design.
+Haskell is an advanced functional programming language with a strong static type
+system. In this particular, Haskell is a good candidate to use type driven design.
 
 ## Introduction
 
@@ -9,10 +10,12 @@ The goal of a static type system is to reduce runtime bugs. In particular:
  * Reject bad programs
  * Accept good programs
 
-In order to take full advantage of the type system, our goal is to turn business logic
-errors into type errors.
+However, we can take this a step farther. To take full advantage of the type system, our
+strategy should be to turn business logic bugs into type errors.
 
-## Haskell Types Overview
+## Haskell Types Primer
+
+Now we'll take a short tour of the Haskell's type system.
 
 ### Syntax
 
@@ -32,22 +35,18 @@ But we can also write them inline
 
 ### Simple Types
 
-Haskell has all the usual simple types:
-
     0 :: Int
     0.1 :: Double
     'H' :: Char
 
 ### Function Types
 
+Haskell function signatures take the form `f :: a -> b -> c`, and can be read "f is a
+function that takes arguments of type b and c and returns a value of type c".
+
     f :: Char -> Int
     g :: Int -> Int
     h :: Int -> Int -> Int
-
-### Type Constructors
-
-    a :: [Int]
-    b :: Map Char Int
 
 ### Polymorphic Types
 
@@ -65,6 +64,38 @@ But `forall` is usually omitted
     h :: [a]
     i :: Map k a
 
+### Type Synonyms
+
+Types can be given new names with type synonyms
+
+    type MyString = String
+
+### Algebraic Data Types
+
+New types can be created by combining other types.
+
+    -- Sum
+    data
+      = MyInt Int
+      | MyDouble Double
+
+    -- Product
+    data MyProduct = MyProdut Int Double
+
+The set of all possible values of a sum is a set-theoretic sum (disjoint union). For
+product, it's the cartesian product. Sums and products can be combined in different ways,
+for example sums of sums, products of sums, and so on.
+
+Algebraic data types are the primary tool for type driven design an Haskell.
+
+Haskell supports a few more variants of ADTs:
+
+    -- Records (Products with named fields)
+    data MyRecord = MyRecord { a :: String, b :: Int }
+
+    -- Zero runtime cost types (must have a single constructor and field)
+    newtype Orders = Orders [Item]
+
 ### Typeclasses
 
 Haskell supports function overloading with typeclasses
@@ -75,32 +106,32 @@ Haskell supports function overloading with typeclasses
     instance (T Int) where
       f a = a + 1
 
-### Contexts
+### Type Constraints
+
+Types variables can be constrained by a type class. Constraints take the form
+`f :: T a =>a` and can be read "f is a function taking an argument of type a, such that a
+is an instance of T".
 
     f :: Show a => a -> String
     g :: Ord a => [a] -> [a]
     h :: (Ord k, Eq a) => Map k a
 
-### User defined types
-
-Haskell supports user-defined datatypes with type synonyms and algebraic types
-
-    type MyString = String
-    data MySum = MyInt Int | MyDouble Double (deriving Eq, Show)
-    data MyProduct a = MyComposite Int Double [a]
-    data MyRecord = MyRecord { a :: String, b :: Int }
-    newtype Orders a = Orders { items :: [Item a] }
-
 ## Tools
 
 ### GHCi
 
-    ghci> :t 5
+GHC offers an interactive repl, GHCi, which can be used te check the type of any expression.
+
+    ghci> :type 5
     5 :: Num a => a
-    ghci> :k Int
+    ghci> :kind Int
     Int :: *
 
 ### Typed Holes
+
+GHC allows special placeholders (`_`) as expressions. When GHC encounters these holes, it will
+generate an error message with helpful details about the context: the expected type, local bindings,
+and valid hole fits.
 
     f :: Double -> Double
     f a = _ a
